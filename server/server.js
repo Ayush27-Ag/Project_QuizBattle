@@ -173,7 +173,9 @@ Format:
     tryModel(0);
   });
 }
+
 const rooms = {};
+
 io.on("connection", socket => {
   console.log("🔌", socket.id);
 
@@ -187,8 +189,13 @@ io.on("connection", socket => {
     while (questions.length < numQ)
       questions.push({ question:`${title} Q${questions.length+1}`, options:["A","B","C","D"], correct:0 });
 
-    rooms[pin] = { pin, title, questions, players:[], answeredBy:{}, timePerQ: parseInt(time)||15,
-                   started:false, createdAt:Date.now() };
+    rooms[pin] = {
+      pin, title, questions, players:[], answeredBy:{},
+      timePerQ: parseInt(time)||15,
+      started: false,
+      currentQIndex: 0,
+      createdAt: Date.now()
+    };
     console.log(`🟢 Room ${pin}: ${questions.length} Qs`);
     socket.emit("roomReady", { pin, total: questions.length });
   });
@@ -212,6 +219,14 @@ io.on("connection", socket => {
     }
     socket.emit("joinSuccess", { pin, title:room.title });
     io.to(pin).emit("playersUpdate", room.players.filter(p=>!p.isHost));
+
+    if (room.started && !isHost) {
+      setTimeout(() => {
+        if (rooms[pin]) {
+          socket.emit("newQuestion", buildQ(room, room.currentQIndex || 0));
+        }
+      }, 500);
+    }
   });
 
   socket.on("getPlayers", pin => {
@@ -222,18 +237,18 @@ io.on("connection", socket => {
     const room = rooms[pin]; if (!room) return;
     const s = room.players.find(p => p.id === socket.id);
     if (!s || !s.isHost) return;
-    room.answeredBy = {}; room.started = true;
+    room.answeredBy = {};
+    room.started = true;
+    room.currentQIndex = 0;
     console.log("🚀 Game:", pin);
     io.to(pin).emit("gameStarted", { pin, title:room.title, total:room.questions.length });
     setTimeout(() => sendQ(pin, 0), 800);
   });
+
   socket.on("submitAnswer", ({ pin, questionIndex, answer }) => {
     const room = rooms[pin]; if (!room) return;
     const sender = room.players.find(p => p.id === socket.id);
-    if (!sender) return;
-    if (!sender || sender.isHost === true) {
-      return;
-    }
+    if (!sender || sender.isHost === true) return;
 
     const qIdx = typeof questionIndex === "number" ? questionIndex : 0;
     const q    = room.questions[qIdx];
@@ -248,6 +263,7 @@ io.on("connection", socket => {
     const sorted = [...room.players.filter(p=>!p.isHost)].sort((a,b)=>b.score-a.score);
     io.to(pin).emit("playersUpdate", sorted);
   });
+
   socket.on("timerDone", ({ pin, questionIndex }) => {
     const room = rooms[pin]; if (!room) return;
     const sender = room.players.find(p => p.id === socket.id);
@@ -268,13 +284,15 @@ io.on("connection", socket => {
     setTimeout(() => {
       if (!rooms[pin]) return;
       if (next < room.questions.length) {
-         io.to(pin).emit("newQuestion", buildQ(room, next));
+        room.currentQIndex = next;
+        io.to(pin).emit("newQuestion", buildQ(room, next));
       } else {
         const final = [...room.players.filter(p=>!p.isHost)].sort((a,b)=>b.score-a.score);
         io.to(pin).emit("quizEnd", final);
       }
     }, 2500);
   });
+
   socket.on("hostTimerDone", ({ pin, questionIndex }) => {
     const room = rooms[pin]; if (!room) return;
 
@@ -286,9 +304,10 @@ io.on("connection", socket => {
     });
 
     const next = questionIndex + 1;
-
     setTimeout(() => {
+      if (!rooms[pin]) return;
       if (next < room.questions.length) {
+        room.currentQIndex = next;
         io.to(pin).emit("newQuestion", buildQ(room, next));
       } else {
         const final = [...room.players.filter(p=>!p.isHost)].sort((a,b)=>b.score-a.score);
@@ -310,8 +329,10 @@ function buildQ(room, i) {
   const q = room.questions[i];
   return { index:i, total:room.questions.length, question:q.question, options:q.options, time:room.timePerQ };
 }
+
 function sendQ(pin, i) {
   const room = rooms[pin]; if (!room) return;
+  room.currentQIndex = i;
   io.to(pin).emit("newQuestion", buildQ(room, i));
 }
 
