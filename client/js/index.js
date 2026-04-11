@@ -18,7 +18,7 @@ async function loginUser() {
   if (!email || !password) return showMsg('loginMsg', 'Please fill all fields!', 'error');
 
   try {
-    const res  = await fetch('http://localhost:5000/login', {
+    const res  = await fetch(window.location.origin + '/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
@@ -44,7 +44,7 @@ async function createAccount() {
   if (password.length < 6)           return showMsg('signupMsg', 'Password must be at least 6 characters', 'error');
 
   try {
-    const res  = await fetch('http://localhost:5000/signup', {
+    const res  = await fetch(window.location.origin + '/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, email, password })
