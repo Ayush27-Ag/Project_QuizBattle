@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="theme-color" content="#08080f">
+  <title>QuizBattle — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="orb orb-purple"></div>
+
+  <div class="page">
+    <nav>
+      <div class="logo-mark">
+        <div class="logo-icon-wrap">⚡</div>
+        <span class="logo-text">QuizBattle</span>
+      </div>
+      <div class="nav-right">
+        <div class="user-pill">Hey, <strong id="userName">Player</strong> 👋</div>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+      </div>
+    </nav>
+
+    <div class="hero">
+      <h1>What's your move?</h1>
+      <p>Host a new quiz or jump into an existing game</p>
+    </div>
+
+    <div class="action-grid">
+      <a href="create.html" class="action-card">
+        <div class="card-icon-wrap icon-purple">🎯</div>
+        <h2>Host a Quiz</h2>
+        <p>Create a quiz with AI-generated questions on any topic you choose. Share the PIN!</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a href="join.html" class="action-card orange">
+        <div class="card-icon-wrap icon-orange">🎮</div>
+        <h2>Join a Quiz</h2>
+        <p>Enter a 6-digit PIN to join a live quiz room and compete against other players.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+    </div>
+  </div>
+
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="theme-color" content="#08080f">
+  <title>QuizBattle — Results</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/leaderboard.css">
+</head>
+<body>
+  <canvas class="confetti" id="confettiCanvas"></canvas>
+  <div class="bg-grid"></div>
+
+  <div class="page">
+    
+    <div class="trophy-area">
+      <span class="trophy-emoji">🏆</span>
+      <div class="trophy-title">Quiz Over!</div>
+      <div class="trophy-sub" id="trophySub">Here are the final results</div>
+    </div>
+
+    
+    <div class="podium" id="podium"></div>
+
+    
+    <div class="lb-section">
+      <div class="lb-header">Full Rankings</div>
+      <div id="lbList"></div>
+    </div>
+
+    
+    <div class="actions">
+      <button class="btn btn-secondary" onclick="goHome()">🏠 Home</button>
+      <button class="btn btn-primary"   onclick="playAgain()">🎯 Play Again</button>
+    </div>
+  </div>
+
+  <script src="js/leaderboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="theme-color" content="#08080f">
+  <title>QuizBattle — Create Quiz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/create.css">
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="orb orb-purple"></div>
+
+  <div class="page">
+    <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
+
+    <div class="page-header">
+      <h1>Create Quiz</h1>
+      <p>Gemini AI will generate questions for your topic instantly</p>
+    </div>
+
+    <div class="card">
+      
+      <div class="form-group">
+        <label for="title">Quiz Topic</label>
+        <input type="text" id="title"
+          placeholder="e.g. Indian History, Cricket, Science, Bollywood..."
+          autocomplete="off" maxlength="100">
+      </div>
+
+      
+      <div class="form-group">
+        <label for="numQ">Number of Questions</label>
+        <input type="number" id="numQ" placeholder="Enter number of questions (e.g. 10)"
+          min="1" max="50" autocomplete="off">
+      </div>
+
+      
+      <div class="form-group">
+        <label for="time">Time Per Question</label>
+        <div class="select-wrap">
+          <select id="time">
+            <option value="10">10 seconds — Fast</option>
+            <option value="15" selected>15 seconds — Normal</option>
+            <option value="20">20 seconds — Relaxed</option>
+            <option value="30">30 seconds — Easy</option>
+            <option value="45">45 seconds — Very Easy</option>
+          </select>
+        </div>
+      </div>
+
+      
+      <div class="btn-ring-wrap">
+        <div class="btn-ring"></div>
+        <div class="btn-ring"></div>
+        <button class="start-quiz-btn" id="startQuizBtn" onclick="startQuiz()">
+          ⚡ Generate &amp; Start Quiz
+        </button>
+      </div>
+
+      
+      <div class="loading-row" id="loadingRow">
+        <div class="spinner"></div>
+        <span>Gemini AI is generating your questions…</span>
+      </div>
+
+      
+      <div class="pin-result" id="pinResult">
+        <div class="pin-result-label">Your Game PIN</div>
+        <div class="pin-result-num" id="pinNum">------</div>
+        <div class="pin-result-sub">Share this with players! Taking you to lobby…</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script src="js/create.js"></script>
+</body>
+</html>

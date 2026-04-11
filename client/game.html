@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="theme-color" content="#08080f">
+  <title>QuizBattle — Game</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/game.css">
+</head>
+<body>
+  <div class="bg-grid"></div>
+
+  
+  <div class="feedback-overlay">
+    <div class="feedback-box" id="feedbackBox">
+      <span class="fb-emoji" id="fbEmoji">✅</span>
+      <div class="fb-label" id="fbLabel">Correct!</div>
+      <div class="fb-pts"   id="fbPts">+10 points</div>
+    </div>
+  </div>
+
+  <div class="page" id="gameArea">
+    
+    <div class="top-bar">
+      <div class="q-progress" id="progressText">Question 1 / ?</div>
+      <div class="score-pill">Score: <span class="pts" id="myScore">0</span></div>
+    </div>
+
+    
+    <div class="timer-wrap">
+      <div class="timer-track">
+        <div class="timer-fill" id="timerFill"></div>
+      </div>
+      <div class="timer-num" id="timerNum">15</div>
+    </div>
+
+    
+    <div class="q-card" id="qCard">
+      <div class="q-text" id="qText">Loading question…</div>
+    </div>
+
+    
+    <div class="options-grid">
+      <button class="opt" onclick="submitAnswer(0)">
+        <div class="opt-badge">A</div>
+        <span class="opt-label-text">…</span>
+      </button>
+      <button class="opt" onclick="submitAnswer(1)">
+        <div class="opt-badge">B</div>
+        <span class="opt-label-text">…</span>
+      </button>
+      <button class="opt" onclick="submitAnswer(2)">
+        <div class="opt-badge">C</div>
+        <span class="opt-label-text">…</span>
+      </button>
+      <button class="opt" onclick="submitAnswer(3)">
+        <div class="opt-badge">D</div>
+        <span class="opt-label-text">…</span>
+      </button>
+    </div>
+
+    
+    <div class="live-scores">
+      <div class="live-title">Live Scores</div>
+      <div id="scoresList"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>

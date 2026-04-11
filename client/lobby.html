@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="theme-color" content="#08080f">
+  <title>QuizBattle — Lobby</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/lobby.css">
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="orb orb-purple"></div>
+  <div class="particles" id="particles"></div>
+
+  <div class="page">
+    
+    <div class="lobby-header">
+      <div class="waiting-badge">
+        <div class="pulse-dot"></div>
+        Waiting for players…
+      </div>
+      <div class="quiz-name" id="quizName">Quiz Lobby</div>
+
+      <div class="info-row">
+        <div class="info-block">
+          <div class="info-label">Game PIN</div>
+          <div class="info-value" id="pinVal">------</div>
+        </div>
+        <div class="info-block">
+          <div class="info-label">Players</div>
+          <div class="info-count" id="playerCount">0</div>
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="players-section">
+      <div class="section-label">Players in lobby</div>
+      <div class="players-grid" id="playersList">
+        <div class="empty-hint">No players yet — share the PIN!</div>
+      </div>
+    </div>
+
+    
+    <div class="start-wrap" id="startWrap" style="display:none">
+      <button class="start-game-btn" onclick="startGame()">
+        <span class="rocket">🚀</span>
+        Start Game
+      </button>
+    </div>
+
+    
+    <div class="waiting-hint" id="waitingHint" style="display:none">
+      Waiting for host to start<span class="dots-anim"></span>
+    </div>
+  </div>
+
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script src="js/lobby.js"></script>
+</body>
+</html>

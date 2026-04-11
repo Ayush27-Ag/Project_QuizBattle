@@ -1,0 +1,79 @@
+body { min-height:100vh; }
+.page { max-width:700px; margin:0 auto; padding:40px 24px; position:relative; z-index:1; }
+
+.lobby-header { text-align:center; margin-bottom:44px; animation:fadeDown 0.5s ease; }
+
+.waiting-badge {
+  display:inline-flex; align-items:center; gap:8px;
+  background:rgba(124,106,247,0.1); border:1px solid rgba(124,106,247,0.3);
+  color:var(--accent); border-radius:100px; padding:7px 18px;
+  font-size:13px; font-weight:500; margin-bottom:20px;
+}
+.pulse-dot { width:8px; height:8px; border-radius:50%; background:var(--accent); animation:pulse 1.5s infinite; }
+
+.quiz-name { font-family:'Syne',sans-serif; font-size:30px; font-weight:800; margin-bottom:20px; }
+
+.info-row {
+  display:inline-flex; align-items:center; gap:0;
+  background:var(--card); border:1px solid var(--border);
+  border-radius:var(--radius-lg); overflow:hidden;
+}
+.info-block { padding:18px 30px; }
+.info-block:first-child { border-right:1px solid var(--border); }
+.info-label { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:4px; }
+.info-value {
+  font-family:'Syne',sans-serif; font-size:36px; font-weight:800; letter-spacing:5px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+}
+.info-count { font-family:'Syne',sans-serif; font-size:36px; font-weight:800; color:var(--accent); }
+
+.players-section { margin-top:32px; }
+.section-label { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:14px; }
+
+.players-grid { display:flex; flex-wrap:wrap; gap:10px; min-height:60px; align-items:flex-start; }
+
+.player-chip {
+  display:flex; align-items:center; gap:10px;
+  background:var(--card); border:1px solid var(--border);
+  border-radius:var(--radius); padding:10px 16px;
+  animation:popIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
+}
+.p-avatar {
+  width:30px; height:30px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:14px; flex-shrink:0; font-weight:700;
+}
+.p-name { font-size:14px; font-weight:500; max-width:110px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+.empty-hint { color:var(--muted); font-size:14px; padding:16px 0; }
+
+.start-wrap { text-align:center; margin-top:40px; }
+
+.start-game-btn {
+  display:inline-flex; align-items:center; justify-content:center; gap:12px;
+  padding:20px 56px; border:none; border-radius:var(--radius-xl);
+  font-family:'Syne',sans-serif; font-size:20px; font-weight:800;
+  letter-spacing:0.04em; cursor:pointer; position:relative; overflow:hidden;
+  background:linear-gradient(135deg,var(--accent) 0%,var(--accent2) 100%);
+  color:white; box-shadow:0 8px 32px rgba(124,106,247,0.45);
+  transition:transform 0.2s, box-shadow 0.2s;
+}
+.start-game-btn::before {
+  content:''; position:absolute; top:-50%; left:-60%;
+  width:60%; height:200%; background:rgba(255,255,255,0.12);
+  transform:skewX(-20deg);
+  animation:btnSheen 3s ease-in-out infinite;
+}
+@keyframes btnSheen {
+  0%,100% { left:-60%; opacity:0; }
+  40%     { left:120%; opacity:1; }
+  41%     { opacity:0; }
+}
+.start-game-btn:hover { transform:translateY(-4px) scale(1.02); box-shadow:0 16px 48px rgba(124,106,247,0.6); }
+.start-game-btn .rocket { font-size:22px; animation:rocketBounce 0.8s ease-in-out infinite; }
+@keyframes rocketBounce { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-4px);} }
+
+.waiting-hint { color:var(--muted); font-size:14px; margin-top:32px; text-align:center; }
+.dots-anim::after { content:'.'; animation:dots 1.5s steps(3,end) infinite; }
+@keyframes dots { 0%{content:'.'} 33%{content:'..'} 66%{content:'...'} }

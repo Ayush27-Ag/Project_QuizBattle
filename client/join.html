@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="theme-color" content="#08080f">
+  <title>QuizBattle — Join</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/join.css">
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="orb orb-orange"></div>
+
+  <div class="page">
+    <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
+
+    <div class="icon-hero">
+      <div class="big-icon">🎮</div>
+      <h1>Join a Quiz</h1>
+      <p>Enter the PIN your host shared with you</p>
+    </div>
+
+    <div class="card">
+      <div class="form-group">
+        <label for="pinInput">Game PIN</label>
+        <input type="number" id="pinInput" placeholder="000000"
+          maxlength="6" inputmode="numeric" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label for="nameInput">Your Nickname</label>
+        <input type="text" id="nameInput" placeholder="Enter your nickname"
+          maxlength="20" autocomplete="nickname">
+      </div>
+      <button class="btn btn-orange btn-block" onclick="joinGame()">Join Now →</button>
+      <div class="error-toast" id="errorToast"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script src="js/join.js"></script>
+</body>
+</html>
