@@ -220,7 +220,7 @@ io.on("connection", socket => {
     socket.emit("joinSuccess", { pin, title:room.title });
     io.to(pin).emit("playersUpdate", room.players.filter(p=>!p.isHost));
 
-    if (room.started && !isHost) {
+    if (room.started) {
       setTimeout(() => {
         if (rooms[pin]) {
           socket.emit("newQuestion", buildQ(room, room.currentQIndex || 0));
