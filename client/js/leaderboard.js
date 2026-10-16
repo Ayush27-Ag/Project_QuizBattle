@@ -1,6 +1,19 @@
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
 const params  = new URLSearchParams(window.location.search);
 let   players = [];
-try { players = JSON.parse(decodeURIComponent(params.get('scores') || '[]')); } catch {}
+try {
+  const fromUrl = params.get('scores');
+  if (fromUrl) players = JSON.parse(decodeURIComponent(fromUrl));
+  else players = JSON.parse(sessionStorage.getItem('lastScores') || '[]');
+  if (!Array.isArray(players)) players = [];
+} catch { players = []; }
 
 const COLORS  = ['#7c6af7','#f7776a','#4ade80','#fbbf24','#38bdf8','#e879f9','#fb923c'];
 const EMOJIS  = ['🦊','🐯','🦋','🐬','🦄','🐉','🦅','🐺','🦁','🎭'];
@@ -8,7 +21,7 @@ const MEDALS  = ['🥇','🥈','🥉'];
 
 if (players[0]) {
   document.getElementById('trophySub').textContent =
-    `🎉 ${players[0].name} wins with ${players[0].score} points!`;
+    `🎉 ${escapeHtml(players[0].name)} wins with ${players[0].score} points!`;
 }
 
 const podium      = document.getElementById('podium');
@@ -23,7 +36,7 @@ dataOrder.forEach((di, vi) => {
   col.className = `podium-col ${colClasses[vi]}`;
   col.innerHTML = `
     <div class="p-avatar-lg">${EMOJIS[di % EMOJIS.length]}</div>
-    <div class="p-name-lg">${p.name}</div>
+    <div class="p-name-lg">${escapeHtml(p.name)}</div>
     <div class="p-pts-lg">${p.score} pts</div>
     <div class="podium-block">${placeLabels[vi]}</div>
   `;
@@ -44,7 +57,7 @@ players.forEach((p, i) => {
     <div class="lb-rank" style="color:${rankColors[i] || 'var(--muted)'}">${MEDALS[i] || (i+1)}</div>
     <div class="lb-ava"  style="background:${color}22;color:${color}">${EMOJIS[i % EMOJIS.length]}</div>
     <div class="lb-info">
-      <div class="lb-name">${p.name}</div>
+      <div class="lb-name">${escapeHtml(p.name)}</div>
       <div class="lb-sub">Rank #${i+1}</div>
     </div>
     <div class="lb-score" style="color:${i===0?'#fbbf24':'var(--accent)'}">${p.score}</div>

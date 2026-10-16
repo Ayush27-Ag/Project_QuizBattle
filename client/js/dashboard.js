@@ -4,7 +4,9 @@ if (!user.name) window.location.href = 'index.html';
 document.getElementById('userName').textContent = user.name || 'Player';
 
 function logout() {
-  localStorage.clear();
+  localStorage.removeItem('user');
+  localStorage.removeItem('playerName');
+  localStorage.removeItem('currentPin');
   window.location.href = 'index.html';
 }
 document.querySelectorAll('.action-card').forEach(card => {

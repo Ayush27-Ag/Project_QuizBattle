@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-  <meta name="theme-color" content="#08080f">
+  <meta name="theme-color" content="#05050f">
   <meta name="description" content="QuizBattle — Real-time multiplayer quiz game">
   <title>QuizBattle — Login</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,21 +17,19 @@
   <div class="orb orb-orange"></div>
 
   <div class="container">
-    
+
     <div class="logo-area">
       <div class="logo-icon-big">⚡</div>
       <h1>QuizBattle</h1>
       <p>Challenge your knowledge in real-time</p>
     </div>
 
-    
     <div class="card">
       <div class="tabs">
         <button class="tab-btn active" data-tab="login"  onclick="switchTab('login')">Login</button>
         <button class="tab-btn"        data-tab="signup" onclick="switchTab('signup')">Sign Up</button>
       </div>
 
-      
       <div class="form-section active" id="loginSection">
         <div class="form-group">
           <label for="loginEmail">Email</label>
@@ -39,13 +37,19 @@
         </div>
         <div class="form-group">
           <label for="loginPassword">Password</label>
-          <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
+          <div class="pass-wrap">
+            <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
+            <button type="button" class="pass-toggle" onclick="togglePass('loginPassword', this)" aria-label="Show password">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
         </div>
-        <button class="btn btn-primary btn-block" onclick="loginUser()">Login →</button>
+        <button class="btn btn-primary btn-block" id="loginBtn" onclick="loginUser()">
+          <span class="btn-spinner"></span><span class="btn-label">Login →</span>
+        </button>
         <div id="loginMsg" class="msg" style="margin-top:14px;"></div>
       </div>
 
-      
       <div class="form-section" id="signupSection">
         <div class="form-group">
           <label for="signupName">Full Name</label>
@@ -57,9 +61,25 @@
         </div>
         <div class="form-group">
           <label for="signupPassword">Password</label>
-          <input type="password" id="signupPassword" placeholder="Min 6 characters" autocomplete="new-password">
+          <div class="pass-wrap">
+            <input type="password" id="signupPassword" placeholder="Min 6 characters" autocomplete="new-password">
+            <button type="button" class="pass-toggle" onclick="togglePass('signupPassword', this)" aria-label="Show password">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
         </div>
-        <button class="btn btn-primary btn-block" onclick="createAccount()">Create Account →</button>
+        <div class="form-group">
+          <label for="signupConfirmPassword">Confirm Password</label>
+          <div class="pass-wrap">
+            <input type="password" id="signupConfirmPassword" placeholder="Re-enter password" autocomplete="new-password">
+            <button type="button" class="pass-toggle" onclick="togglePass('signupConfirmPassword', this)" aria-label="Show password">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-block" id="signupBtn" onclick="createAccount()">
+          <span class="btn-spinner"></span><span class="btn-label">Create Account →</span>
+        </button>
         <div id="signupMsg" class="msg" style="margin-top:14px;"></div>
       </div>
     </div>

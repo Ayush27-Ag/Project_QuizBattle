@@ -1,20 +1,33 @@
 const socket = io(window.location.origin);
+let joinInFlight = false;
 
 function joinGame() {
+  if (joinInFlight) return;
+
   const pin  = document.getElementById('pinInput').value.trim();
   const name = document.getElementById('nameInput').value.trim();
 
   if (!pin || !name)    return showError('Please fill in both fields!');
   if (pin.length !== 6) return showError('PIN must be exactly 6 digits');
   if (name.length < 2)  return showError('Name must be at least 2 characters');
-  if (name === 'Host')  return showError('"Host" is a reserved name. Please use another.');
+  if (name.toLowerCase() === 'host')  return showError('"Host" is a reserved name. Please use another.');
+  if (!socket.connected) return showError('Not connected to server. Refresh and try again.');
 
+  joinInFlight = true;
   localStorage.setItem('playerName', name);
   localStorage.setItem('currentPin', pin);
+  if (!localStorage.getItem('playerId')) {
+    localStorage.setItem('playerId', (crypto.randomUUID && crypto.randomUUID()) || ('p' + Date.now() + Math.random()));
+  }
 
-  socket.emit('joinQuiz', { pin, name, isHost: false });
+  socket.off('joinSuccess');
+  socket.off('errorMsg');
+  socket.emit('joinQuiz', { pin, name, isHost: false, playerId: localStorage.getItem('playerId') });
   socket.once('joinSuccess', ({ pin: p }) => { window.location.href = `lobby.html?pin=${p}`; });
-  socket.once('errorMsg',    msg          => showError(msg));
+  socket.once('errorMsg', msg => {
+    joinInFlight = false;
+    showError(msg);
+  });
 }
 
 function showError(msg) {

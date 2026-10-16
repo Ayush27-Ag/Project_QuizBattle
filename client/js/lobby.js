@@ -26,29 +26,45 @@ function playStart() {
     o.start(t); o.stop(t+0.35);
   });
 }
-const socket = io(window.location.origin);
 const params  = new URLSearchParams(window.location.search);
 const pin     = params.get('pin');
 const name    = localStorage.getItem('playerName');
 const isHost  = name === 'Host';
+
+if (!pin || !name) {
+  window.location.href = isHost ? 'dashboard.html' : 'join.html';
+}
+
+const socket = io(window.location.origin);
 
 document.getElementById('pinVal').textContent = pin;
 
 if (isHost) {
   document.getElementById('startWrap').style.display   = 'block';
   document.getElementById('waitingHint').style.display = 'none';
-  socket.emit('joinQuiz', { pin, name, isHost: true });
+  socket.emit('joinQuiz', { pin, name, isHost: true, playerId: localStorage.getItem('playerId') });
 } else {
   document.getElementById('startWrap').style.display   = 'none';
   document.getElementById('waitingHint').style.display = 'block';
-  socket.emit('joinQuiz', { pin, name, isHost: false });
+  socket.emit('joinQuiz', { pin, name, isHost: false, playerId: localStorage.getItem('playerId') });
 }
 
 socket.emit('getPlayers', pin);
 
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
 const COLORS = ['#7c6af7','#f7776a','#4ade80','#fbbf24','#38bdf8','#e879f9','#fb923c','#a78bfa'];
 const EMOJIS = ['🦊','🐯','🦋','🐬','🦄','🐉','🦅','🐺','🦁','🎭','🐸','🦔','🐙','🦩','🦜'];
 let prevCount = 0;
+let goingToGame = false;
+
+socket.on('errorMsg', msg => alert(msg));
 
 socket.on('joinSuccess', ({ title }) => {
   if (title) document.getElementById('quizName').textContent = title;
@@ -71,12 +87,14 @@ socket.on('playersUpdate', players => {
     const color = COLORS[i % COLORS.length];
     chip.innerHTML = `
       <div class="p-avatar" style="background:${color}22;color:${color}">${EMOJIS[i%EMOJIS.length]}</div>
-      <div class="p-name">${p.name}</div>`;
+      <div class="p-name">${escapeHtml(p.name)}</div>`;
     list.appendChild(chip);
   });
 });
 
 socket.on('gameStarted', ({ pin: p }) => {
+  if (goingToGame) return;
+  goingToGame = true;
   playStart();
   setTimeout(() => window.location.href = `game.html?pin=${p}`, 400);
 });

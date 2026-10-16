@@ -20,6 +20,14 @@ const playWrong   = () => [330,247].forEach((f,i) => beep(f,"sawtooth",0.18,0.28
 const playTick    = () => beep(900,"square",0.04,0.05,0);
 const playUrgent  = () => beep(480,"sine",0.14,0.18,0);
 
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
 const socket = io(window.location.origin);
 const params = new URLSearchParams(window.location.search);
 const pin    = params.get("pin");
@@ -31,7 +39,11 @@ let myScore        = 0;
 let timerInterval  = null;
 let totalTime      = 15;
 let hasAnswered    = false;
-let timerDoneSent  = false;
+let answerRevealed = false;
+let hasAnsweredIndex = -1;
+let endingQuiz = false;
+
+if (!pin || !name) window.location.href = "join.html";
 
 if (isHost) {
   document.getElementById("gameArea").innerHTML = `
@@ -58,14 +70,15 @@ if (isHost) {
     </div>`;
 }
 
-socket.on("connect", () => socket.emit("joinQuiz", { pin, name, isHost }));
+socket.on("connect", () => socket.emit("joinQuiz", { pin, name, isHost, playerId: localStorage.getItem("playerId") }));
+socket.on("errorMsg", msg => alert(msg));
 
 socket.on("newQuestion", q => {
-  hasAnsweredIndex = -1; 
+  hasAnsweredIndex = -1;
   initAudio();
-  hasAnswered   = false;
-  timerDoneSent = false;
-  currentQIndex = q.index;
+  hasAnswered    = false;
+  answerRevealed = false;
+  currentQIndex  = q.index;
 
   const prog = document.getElementById("progressText");
   if (prog) prog.textContent = `Question ${q.index + 1} / ${q.total}`;
@@ -84,7 +97,7 @@ socket.on("newQuestion", q => {
     const card = document.getElementById("qCard");
     card.style.animation = "none"; void card.offsetHeight; card.style.animation = "";
     startTimer(q.time, () => {
-      socket.emit("hostTimerDone", { pin, questionIndex: q.index });
+      if (!answerRevealed) socket.emit("hostTimerDone", { pin, questionIndex: q.index });
     });
 
   } else {
@@ -100,16 +113,16 @@ socket.on("newQuestion", q => {
 
     const card = document.getElementById("qCard");
     card.style.animation = "none"; void card.offsetHeight; card.style.animation = "";
-    startTimer(q.time, () => {
-      if (!timerDoneSent) {
-        timerDoneSent = true;
-        socket.emit("timerDone", { pin, questionIndex: currentQIndex });
-      }
-    });
+    startTimer(q.time);
   }
 });
 
-socket.on("showCorrectAnswer", ({ correctAnswer }) => {
+socket.on("showCorrectAnswer", ({ correctAnswer, questionIndex }) => {
+  if (typeof questionIndex === "number" && questionIndex !== currentQIndex) return;
+  if (answerRevealed) return;
+  answerRevealed = true;
+  clearInterval(timerInterval);
+
   document.querySelectorAll(".opt").forEach((btn, i) => {
     btn.disabled = true;
 
@@ -168,17 +181,18 @@ socket.on("playersUpdate", players => {
     const p = players[i]; if (!p) return;
     const div = document.createElement("div");
     div.className = "score-row";
-    div.innerHTML = `<div class="sr-rank">${medal}</div><div class="sr-name">${p.name}</div><div class="sr-pts">${p.score} pts</div>`;
+    div.innerHTML = `<div class="sr-rank">${medal}</div><div class="sr-name">${escapeHtml(p.name)}</div><div class="sr-pts">${p.score} pts</div>`;
     list.appendChild(div);
   });
 });
 
 socket.on("quizEnd", players => {
+  if (endingQuiz) return;
+  endingQuiz = true;
   clearInterval(timerInterval);
-  window.location.href = `leaderboard.html?pin=${pin}&scores=${encodeURIComponent(JSON.stringify(players))}`;
+  try { sessionStorage.setItem("lastScores", JSON.stringify(players || [])); } catch {}
+  window.location.href = `leaderboard.html?pin=${encodeURIComponent(pin)}`;
 });
-
-let hasAnsweredIndex = -1;
 
 function submitAnswer(index) {
   if (hasAnswered || isHost) return;
@@ -210,7 +224,7 @@ function startTimer(duration, onDone) {
 
   const fill = document.getElementById("timerFill");
   const num  = document.getElementById("timerNum");
-  if (!fill || !num) { onDone && onDone(); return; }
+  if (!fill || !num) return;
   fill.style.transition = "none";
   fill.style.width      = "100%";
   fill.style.background = "linear-gradient(90deg,#7c6af7,#f7776a)";
